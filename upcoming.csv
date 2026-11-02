@@ -1,0 +1,12 @@
+key,as_of,section,event,type,start,days_to_go,window_days,booked,new_7d,capacity,spaces_left,pct_booked,revenue,past_by_now,occ_booked,men,men_cap,women,women_cap,other,predicted_places,predicted_revenue,status,target_booked,target_spaces_left,target_pct,target_revenue
+2026-11-17-1,2026-11-02,featured,The Myth of the Return Journey Course,Course,2026-11-17,15,60,9,4,80,71,0.113,575,,9,,,,,,,,New – no past run,,,,
+2026-11-06-0,2026-11-02,main,Sub30 Weekend Retreat,Retreat,2026-11-06,4,90,50,1,50,0,1.0,6260,44.7,50,23,23,27,27,0,50,6260,Ahead,47,3,0.94,5220
+2026-11-27-2,2026-11-02,main,Buddhism & Meditation Weekend,Retreat,2026-11-27,25,90,27,3,52,25,0.519,6635,12.7,27,17,24,10,28,0,38,8674,Ahead,24,28,0.462,5455
+2027-01-08-7,2026-11-02,main,Buddhism and 12-Step Weekend Retreat,Retreat,2027-01-08,67,90,5,2,52,47,0.096,1130,6.0,5,4,24,1,28,0,31,7027,Behind,32,20,0.615,6994
+2027-01-15-8,2026-11-02,main,Buddhism & Meditation Weekend,Retreat,2027-01-15,74,90,3,1,52,49,0.058,780,4.3,3,3,24,0,28,0,23,5229,Behind,24,28,0.462,5455
+2027-01-22-9,2026-11-02,main,Yoga for Meditation Weekend,Retreat,2027-01-22,81,90,4,0,58,54,0.069,1120,5.3,4,0,19,4,31,0,29,7599,Behind,31,27,0.534,7966
+2027-01-29-10,2026-11-02,main,Buddhism and Deep Ecology Retreat,Retreat,2027-01-29,88,90,4,4,52,48,0.077,1040,2.0,4,2,24,2,28,0,39,9309,Ahead,37,15,0.712,8527
+2026-12-22-3,2026-11-02,winter,Winter Retreat – All 10 days,Retreat,2026-12-22,50,150,15,2,63,48,0.238,5864,18.0,15,4,32,11,31,0,45,22476,Behind,48,15,0.762,23227
+2026-12-22-4,2026-11-02,winter,Winter Retreat – First 5 days,Retreat,2026-12-22,50,150,13,2,52,39,0.25,2900,15.0,13,4,24,9,28,0,49,16364,Behind,51,1,0.981,16137
+2026-12-27-6,2026-11-02,winter,Winter Retreat – Last 5 days,Retreat,2026-12-27,55,150,36,5,52,16,0.692,6930,32.0,36,14,30,22,22,0,52,17423,Ahead,52,0,1.0,20868
+2026-12-23-5,2026-11-02,winter,Winter Intensive Retreat,Retreat,2026-12-23,51,150,34,4,52,18,0.654,6990,38.5,34,17,28,17,24,0,42,22411,Behind,47,5,0.904,24160
