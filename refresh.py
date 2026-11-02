@@ -2,7 +2,7 @@
 """LBC Weekly Bookings dashboard refresh.
 
 Usage (run from the work folder that holds history.json, series/, orders/, voided/):
-  python3 refresh.py select YYYY-MM-DD   -> writes selected.json, prints series to fetch
+  python3 refresh.py select YYYY-MM-DD   -> writes selected.json and occ_needed.json, prints series to fetch
   python3 refresh.py build  YYYY-MM-DD   -> writes upcoming_<date>.csv, booking_curves_<date>.csv,
                                             updated history.json, prints table + checks
 
@@ -159,6 +159,9 @@ def cmd_select(today):
         if nd and D(nd) <= end: sel.add(sid)
     # retreats: also the matching final-payment series for any selected deposit series (same name stem)
     json.dump(sorted(sel), open('selected.json', 'w'))
+    occ = sorted(sid for sid in sel if sid in S and kind_of(S[sid]) == 'course')
+    json.dump(occ, open('occ_needed.json', 'w'))
+    print('Course series needing event_occurrences_get -> occ/<SID>.json:', ' '.join(occ))
     print(len(sel), 'series to fetch:')
     for sid in sorted(sel): print(sid, S.get(sid, {}).get('name', '(from last week)'))
 
@@ -218,6 +221,24 @@ def cmd_build(today):
                 yr = st[:4] if st[5:7] == '12' else str(int(st[:4]) - 1); key = f'WR|{yr}|{part}'
             else: key = 'R|' + st
             if key in runs: runs[key]['income'].append([o['created_at'][:10], li['total'] / 100])
+    # runs with no bookings yet: courses from occ/<SID>.json (event_occurrences_get), retreats from the series' next date
+    horizon = today + datetime.timedelta(days=92)
+    for sid in sel:
+        s = S[sid]; kind = kind_of(s)
+        if kind == 'course':
+            f = f'occ/{sid}.json'
+            if not os.path.exists(f): continue
+            for e in lj(f)['data']:
+                st, en = e['start']['date'], e['end']['date']
+                if (D(en) - D(st)).days < 14 or not (today <= D(st) <= horizon): continue
+                runs.setdefault('C|' + e['id'], dict(name=s['name'], type=ctype(s['name']), kind='course', start=st, end=en, places=[], income=[],
+                                                     sids={sid}, modes=collections.Counter(), g=collections.Counter()))
+        elif kind == 'retreat' and not is_wr(s) and not is_final(s['name']) and s.get('total_occurrences') == 1:
+            st = (s.get('next_occurrence_date') or {}).get('date')
+            if not st or not (today <= D(st) <= horizon): continue
+            r = runs.setdefault('R|' + st, dict(name=s['name'], type=rtype(s['name']), kind='retreat', start=st, end=None, places=[], income=[],
+                                                sids=set(), deps=set(), g=collections.Counter()))
+            r['sids'].add(sid); r['deps'].add(sid)
     # capacities / prices
     for k, r in runs.items():
         if r['kind'] == 'course':
@@ -234,7 +255,7 @@ def cmd_build(today):
     pending = set()
     upcoming = {}
     for k, r in runs.items():
-        if D(r['start']) <= today:
+        if D(r['start']) < today:  # runs starting today stay on the report for one more week
             if r['places']:
                 hist[k] = dict(name=r['name'], type=r['type'], kind=r['kind'], start=r['start'], end=r['end'], capacity=r['capacity'], fp=r['fp'],
                                places=sorted(r['places']), income=[[a, round(b, 2)] for a, b in r['income']])

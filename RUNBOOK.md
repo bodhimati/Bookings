@@ -4,12 +4,13 @@ This repository is the LBC weekly bookings page (GitHub Pages: index.html reads 
 The Monday scheduled task refreshes the data from Ticket Tailor and commits it to main.
 
 ## Steps (run from the repository root)
-1. Make a work folder outside the repo, e.g. /tmp/wk, with series/, orders/, voided/. Copy refresh.py and history.json from the repository root into it.
+1. Make a work folder outside the repo, e.g. /tmp/wk, with series/, orders/, voided/, occ/. Copy refresh.py and history.json from the repository root into it.
 2. Series list: Ticket Tailor event_series_get with created_at_gte = (today − 450 days, Unix seconds), limit 100. Save each page as series/pN.json (if a result is saved to a tool-results file, copy that file). Page with starting_after = id of the last series until links.next is null.
 3. `python3 refresh.py select YYYY-MM-DD` → selected.json.
 4. For each selected series SID (read-only calls only):
    - orders_get(event_series_id=SID, limit=100), paging with starting_after; save page k to orders/SID_pk.json; then write the page count to orders/SID.odone.
    - issued_tickets_get(event_series_id=SID, status="voided", limit=100), same paging, voided/SID_pk.json and voided/SID.vdone.
+   - For each SID listed in occ_needed.json (course series): event_occurrences_get(event_series_id=SID); save the whole result as occ/SID.json (copy the tool-results file if it was saved to one). This lets courses with no bookings yet appear on the report.
    With 15+ series, split fetching across 2–3 subagents.
 5. `python3 refresh.py build YYYY-MM-DD` → upcoming_<date>.csv, booking_curves_<date>.csv, health_<date>.csv, updated history.json.
    CHECKS: DIFF on a single-occurrence series means places don't match Ticket Tailor's issued count. Investigate; if it can't be explained, don't publish – report it.
