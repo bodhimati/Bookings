@@ -59,7 +59,7 @@ window.dash = (() => {
     },
     onData: (cb) => { cbs.push(cb); },
   };
-  const files = { upcoming: 'data/upcoming.csv', curves: 'data/curves.csv', health: 'data/health.csv' };
+  const files = { upcoming: 'upcoming.csv', curves: 'curves.csv', health: 'health.csv' };
   Object.keys(files).forEach(k => sets[k] = { status: 'loading', data: [] });
   const run = () => cbs.forEach(cb => { try { cb(); } catch (e) { console.error(e); } });
   Promise.all(Object.entries(files).map(([k, f]) =>
